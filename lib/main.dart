@@ -13,6 +13,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // que usaremos para auth y base de datos en toda la app
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'core/router/app_router.dart';
+
 // main() es async porque necesita esperar operaciones
 // que toman tiempo antes de mostrar la UI
 void main() async {
@@ -46,12 +48,12 @@ void main() async {
 }
 
 // MyApp debe ser una clase, no una función
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp.router(
       // Nombre de la aplicación usado por el sistema operativo
       title: 'Identite TaskHub',
 
@@ -61,25 +63,18 @@ class MyApp extends StatelessWidget {
       // Configuración visual global de la aplicación
       // Todos los widgets heredarán este tema por defecto
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 91, 36, 3)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 91, 36, 3),
+        ),
 
         // Activa los componetes y estilos de Material Design 3 (Material You)
         useMaterial3: true,
       ),
 
       // Pantalla inicial que se muestra al abrir la aplicación
-      home: const Scaffold(
-
-        // Scaffold proporciona la estructura básica de una pantalla 
-        body: Center(
-
-          //  Center centra a su hijo tanto vertical como horizontalmente
-          child: Text(
-            
-            // Texto temporal para validar que la aplicación está funcionando
-            'Identite TaskHub — en construcción (Paciencia jeje)'),
-        ),
-      ),
+      // ← PROVIDER → SCREEN: MyApp consume appRouterProvider
+      // El router maneja toda la navegación incluyendo los guards de auth
+      routerConfig: ref.watch(appRouterProvider),
     );
   }
 }
